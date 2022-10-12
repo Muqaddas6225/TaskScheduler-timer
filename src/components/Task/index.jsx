@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Row, Col, Container } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import axios from "axios";
-
+import { useDispatch,useSelector } from "react-redux";
+import {setTask} from "../../redux/actions/AddTaskAction"
 import "react-datepicker/dist/react-datepicker.css";
 
 import TaskList from "components/List";
@@ -16,6 +17,9 @@ const TaskSchedule = () => {
   })
   const [formErrors, setFormErrors] = useState({});
   const [status, setStatus] = useState();
+  const dispatch= useDispatch()
+  const selector = useSelector((state)=>state)
+  console.log(selector.first.allTasks, "selector")
 
   function onTextFieldChange(e){
     setTasks({
@@ -43,12 +47,15 @@ const TaskSchedule = () => {
     }
 
     if(Object.keys(errors).length === 0){
-      try{
-        await axios.post(`http://localhost:3001/tasks`, tasks)
-        setStatus(true);
-      }catch(error){
-        console.log('something wrong')
-      }
+       dispatch(setTask(tasks))
+       alert(selector.first.allTasks.payload)
+      // try{
+      //   let res = await axios.post(`http://localhost:3001/tasks`, tasks)
+      //   console.log(res, "res")
+      //   setStatus(true);
+      // }catch(error){
+      //   console.log('something wrong')
+      // }
     }
     else {
       setFormErrors(errors)
